@@ -1,0 +1,15 @@
+services:
+  file_storage:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=file_storage
+    volumes:
+      - pg_file_storage:/var/lib/postgresql
+    ports:
+      - "127.0.0.1:5432:5432"
+
+volumes:
+  pg_file_storage:
