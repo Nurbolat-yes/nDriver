@@ -2,11 +2,14 @@ package by.nurbolat.ndrive.service;
 
 import by.nurbolat.ndrive.database.entity.User;
 import by.nurbolat.ndrive.database.repository.UserRepository;
-import dto.UserDto;
+import by.nurbolat.ndrive.map.UserMapper;
+import dto.UserCreateDto;
+import dto.UserReadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -15,16 +18,16 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserDto create(UserDto userDto){
+    public UserReadDto createUser(UserCreateDto userCreateDto){
         User user = User.builder()
-            .username(userDto.getUsername())
-            .password(userDto.getPassword())
-            .build();
+                .username(userCreateDto.getUsername())
+                .password(passwordEncoder.encode(userCreateDto.getPassword()))
+                .build();
 
-        User user1 = userRepository.save(user);
-
-        return new UserDto(user1.getUsername(),user1.getPassword());
+       return new UserReadDto(userRepository.save(user).getUsername());
     }
 
     @Override
