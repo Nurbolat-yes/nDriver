@@ -17,3 +17,9 @@ spring:
     drop-first: false
     change-log: db/changelog/db.changelog-master.yml
     default-schema: public
+
+minio:
+  url: http://127.0.0.1:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: user-files
