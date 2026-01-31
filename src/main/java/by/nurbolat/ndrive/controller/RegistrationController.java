@@ -1,9 +1,11 @@
 package by.nurbolat.ndrive.controller;
 
 import by.nurbolat.ndrive.config.SecurityConfig;
+import by.nurbolat.ndrive.service.MinioService;
 import by.nurbolat.ndrive.service.UserService;
 import dto.UserCreateDto;
 import dto.UserReadDto;
+import io.minio.errors.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -22,6 +24,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +37,8 @@ public class RegistrationController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
+    private final MinioService minioService;
+
     @GetMapping("/check-auth")
     public ResponseEntity<String> check(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -39,6 +46,11 @@ public class RegistrationController {
         }
 
         return ResponseEntity.ok(authentication.getName());
+    }
+
+    @GetMapping("/make")
+    public void make() throws Exception {
+        minioService.makeBucket();
     }
 
 
